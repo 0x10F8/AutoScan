@@ -4,38 +4,46 @@ import os
 import subprocess
 import shlex
 import time
+import socket
 
+# Token which occurs in the last line of an NMAP scan
 END_OF_NMAP_SCAN = "Nmap done:"
 
 # Format string for shell spawning, argument 0 is the script and 1 is the args
-spawn_shell_frmt = 'gnome-terminal -q -- /bin/bash -c "{0} {1}"'
+SPAWN_SHELL_FRMT = 'gnome-terminal -q -- /bin/bash -c "{0} {1}"'
 
 # The scripts resources dir
-scripts_dir = "{0}/scripts".format(os.getcwd())
+SCRIPTS_DIR = "{0}/scripts".format(os.getcwd())
 
 
 def get_script(script_name):
-    return "{0}/{1}".format(scripts_dir, script_name)
+    '''
+    Get the script within the scripts resources directory
+    '''
+    return "{0}/{1}".format(SCRIPTS_DIR, script_name)
 
 
 # Some basic initial scans that will be started for everyone
-basic_scan_script = get_script("basic_scan.sh")
-tcp_scan_script = get_script("tcp_scan.sh")
-udp_scan_script = get_script("udp_scan.sh")
-initial_scans = [basic_scan_script, tcp_scan_script, udp_scan_script]
+# Includes a fast basic scan which will be used to decide whether to start more scans
+# And thorough UDP and TCP scans which will take a bit longer to finish
+BASIC_SCAN_SCRIPT = get_script("basic_scan.sh")
+TCP_SCAN_SCRIPT = get_script("tcp_scan.sh")
+UDP_SCAN_SCRIPT = get_script("udp_scan.sh")
+INITIAL_SCANS = [BASIC_SCAN_SCRIPT, TCP_SCAN_SCRIPT, UDP_SCAN_SCRIPT]
 
 # HTTP scan scripts
-nikto_script = get_script("nikto_scan.sh")
-dirsearch_script = get_script("dirsearch.sh")
+NIKTO_SCRIPT = get_script("nikto_scan.sh")
+DIRSEARCH_SCRIPT = get_script("dirsearch.sh")
 
 # SMB scan scripts
-smb_script = get_script("smb_scan.sh")
+SMB_SCRIPT = get_script("smb_scan.sh")
 
 # SMTP scan scripts
-smtp_script = get_script("smtp_scan.sh")
+SMTP_SCRIPT = get_script("smtp_scan.sh")
 
 # POP3 scan scripts
-pop3_script = get_script("pop3_scan.sh")
+POP3_SCRIPT = get_script("pop3_scan.sh")
+
 
 def log(string):
     print("[+] {0}".format(string))
@@ -48,8 +56,9 @@ def format_script_args(ip, dir):
 def launch_terminal(script, script_args, keep_open=False):
     if keep_open:
         script_args += " && /bin/bash"
-    args = shlex.split(spawn_shell_frmt.format(script, script_args))
+    args = shlex.split(SPAWN_SHELL_FRMT.format(script, script_args))
     subprocess.Popen(args)
+
 
 def scrape_banner(ip_address, port, timeout=10):
     try:
@@ -58,21 +67,24 @@ def scrape_banner(ip_address, port, timeout=10):
             s.connect((ip_address, port))
             banner = s.recv(1024)
             return banner.decode('ascii')
-    except:
+    except Exception as e:
+        log(e)
         log("Unable to scrape banner from {0}:{1}".format(ip_address, port))
         pass
 
+
 def do_smtp_scans(ip, dir):
     log("Found smtp server - starting scans")
-    launch_terminal(smtp_script, format_script_args(ip, dir))
+    launch_terminal(SMTP_SCRIPT, format_script_args(ip, dir))
     log("Trying to scrape SMTP banner")
     banner = scrape_banner(ip, 25)
     with open("{0}/smtpbanner.txt".format(dir), "w") as banner_output:
         banner_output.write(banner)
 
+
 def do_pop3_scans(ip, dir):
     log("Found pop3 server - starting scans")
-    launch_terminal(pop3_script, format_script_args(ip, dir))
+    launch_terminal(POP3_SCRIPT, format_script_args(ip, dir))
     log("Trying to scrape POP3 banner")
     banner = scrape_banner(ip, 110)
     with open("{0}/pop3banner.txt".format(dir), "w") as banner_output:
@@ -81,18 +93,18 @@ def do_pop3_scans(ip, dir):
 
 def do_http_scans(ip, dir):
     log("Found http server - starting nikto and dirsearch")
-    launch_terminal(nikto_script, format_script_args(ip, dir))
-    launch_terminal(dirsearch_script, ip, keep_open=True)
+    launch_terminal(NIKTO_SCRIPT, format_script_args(ip, dir))
+    launch_terminal(DIRSEARCH_SCRIPT, ip, keep_open=True)
 
 
 def do_smb_scans(ip, dir):
     log("Found smb server - starting enumeration")
-    launch_terminal(smb_script, format_script_args(ip, dir))
+    launch_terminal(SMB_SCRIPT, format_script_args(ip, dir))
 
 
 def start_initial_scans(ip, dir):
     log("Launching initial port scans")
-    for scan_script in initial_scans:
+    for scan_script in INITIAL_SCANS:
         launch_terminal(scan_script, format_script_args(ip, dir))
 
 
@@ -129,6 +141,8 @@ if len(sys.argv) < 2:
 
 # Get the target ip
 target_ip = sys.argv[1]
+
+# The target dir is just the IP address of the target
 output_dir = "{0}/{1}/".format(os.getcwd(), target_ip)
 
 # Create a directory for this ip address
