@@ -45,12 +45,17 @@ SMTP_SCRIPT = get_script("smtp_scan.sh")
 IMAP_PORT = 143
 IMAP_SCRIPT = get_script("imap_scan.sh")
 
-
 # HTTP Info
 HTTP_PORT = 80
 HTTP_SCRIPT = get_script("http_scan.sh")
 HTTP_NIKTO_SCRIPT = get_script("nikto_scan.sh")
 HTTP_DIRSEARCH_SCRIPT = get_script("dirsearch.sh")
+
+# HTTPS Info
+HTTPS_PORT = 443
+HTTPS_SCRIPT = get_script("https_scan.sh")
+HTTPS_NIKTO_SCRIPT = get_script("nikto_scan_https.sh")
+HTTPS_DIRSEARCH_SCRIPT = get_script("dirsearch_https.sh")
 
 # SMB Info
 SMB_PORT = 445
