@@ -1,6 +1,6 @@
 from os import getcwd
 from shlex import split
-from subprocess import Popen
+from subprocess import Popen, DEVNULL
 
 
 def get_script(script_name):
@@ -30,7 +30,7 @@ UDP_SCAN_SCRIPT = get_script("udp_scan.sh")
 
 # FTP Info
 FTP_PORT = 21
-FTP_SCRIPT = get_script("ftp_Scan.sh")
+FTP_SCRIPT = get_script("ftp_scan.sh")
 
 # SSH Info
 SSH_PORT = 22
@@ -78,6 +78,6 @@ def launch_terminal(script, script_args, keep_open=False):
 
 def launch_script_without_terminal(script, script_args, wait=True):
     args = split(RUN_SCRIPT_FRMT.format(script, script_args))
-    process = Popen(args, stdout=None, stderr=None, stdin=None)
+    process = Popen(args, stdout=DEVNULL, stderr=DEVNULL)
     if wait:
         process.wait()
