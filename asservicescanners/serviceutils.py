@@ -78,6 +78,6 @@ def launch_terminal(script, script_args, keep_open=False):
 
 def launch_script_without_terminal(script, script_args, wait=True):
     args = split(RUN_SCRIPT_FRMT.format(script, script_args))
-    process = Popen(args)
+    process = Popen(args, stdout=None, stdout=None, stdin=None)
     if wait:
         process.wait()
