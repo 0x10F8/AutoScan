@@ -9,7 +9,7 @@ class HTTPSScanner(AbstractScanner):
         super().__init__(ip, output_dir, HTTPS_PORT)
 
     def scan(self):
-        aslog.log("Found http server - starting scans")
+        aslog.log("Found https server - starting scans")
         launch_script_without_terminal(HTTPS_SCRIPT, format_script_args(
             self.ip, self.output_dir))
         launch_terminal(HTTPS_NIKTO_SCRIPT, format_script_args(
