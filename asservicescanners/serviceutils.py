@@ -16,6 +16,9 @@ SCRIPTS_DIR = "{0}/scripts".format(getcwd())
 # Format string for shell spawning, argument 0 is the script and 1 is the args
 SPAWN_SHELL_FRMT = 'gnome-terminal -q -- /bin/bash -c "bash {0} {1}"'
 
+# Format string for running scripts without terminal, argument 0 is the script and 1 is the args
+RUN_SCRIPT_FRMT = '/bin/bash {0} {1}'
+
 # -------------------------
 # Service scripts and ports
 # -------------------------
@@ -71,3 +74,9 @@ def launch_terminal(script, script_args, keep_open=False):
         script_args += " && /bin/bash"
     args = split(SPAWN_SHELL_FRMT.format(script, script_args))
     Popen(args)
+
+def launch_script_without_terminal(script, script_args, wait=True):
+    process = Popen(RUN_SCRIPT_FRMT.format(script, script_args))
+    if wait:
+        process.wait()
+    

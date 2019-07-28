@@ -1,5 +1,5 @@
 from asservicescanners.abstractscanner import AbstractBannerScrapeScanner
-from asservicescanners.serviceutils import FTP_PORT, FTP_SCRIPT, launch_terminal, format_script_args
+from asservicescanners.serviceutils import FTP_PORT, FTP_SCRIPT, launch_script_without_terminal, format_script_args
 from aslogging import aslog
 
 
@@ -10,7 +10,7 @@ class FTPScanner(AbstractBannerScrapeScanner):
 
     def scan(self):
         aslog.log("Found ftp server - starting scans")
-        launch_terminal(FTP_SCRIPT, format_script_args(
+        launch_script_without_terminal(FTP_SCRIPT, format_script_args(
             self.ip, self.output_dir))
         aslog.log("Trying to scrape FTP banner")
         self.scrape_banner("ftpbanner.txt")
