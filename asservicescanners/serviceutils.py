@@ -45,6 +45,7 @@ IMAP_SCRIPT = get_script("imap_scan.sh")
 
 # HTTP Info
 HTTP_PORT = 80
+HTTP_SCRIPT = get_script("http_scan.sh")
 HTTP_NIKTO_SCRIPT = get_script("nikto_scan.sh")
 HTTP_DIRSEARCH_SCRIPT = get_script("dirsearch.sh")
 
