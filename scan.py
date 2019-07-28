@@ -5,6 +5,7 @@ import subprocess
 import shlex
 import time
 import socket
+import colorama
 
 # Token which occurs in the last line of an NMAP scan
 END_OF_NMAP_SCAN = "Nmap done:"
@@ -44,9 +45,16 @@ SMTP_SCRIPT = get_script("smtp_scan.sh")
 # POP3 scan scripts
 POP3_SCRIPT = get_script("pop3_scan.sh")
 
+# VNC scan scripts
+VNC_SCRIPT = get_script("vnc_scan.sh")
+
 
 def log(string):
-    print("[+] {0}".format(string))
+    
+    print("[{0}+{1}] {2}".format(colorama.Fore.GREEN, colorama.Fore.RESET, string))
+
+def warning_log(string):
+    print("[{0}?{1}] {2}".format(colorama.Fore.YELLOW, colorama.Fore.RESET, string))
 
 
 def format_script_args(ip, dir):
@@ -60,16 +68,20 @@ def launch_terminal(script, script_args, keep_open=False):
     subprocess.Popen(args)
 
 
-def scrape_banner(ip_address, port, timeout=10):
+def scrape_banner(ip_address, port, output_file, timeout=10):
     try:
         with(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
             s.settimeout(timeout)
             s.connect((ip_address, port))
             banner = s.recv(1024)
-            return banner.decode('ascii')
+            banner.decode('ascii')
+            if banner is not None:
+                with open("{0}".format(output_file), "w") as banner_output:
+                    banner_output.write(banner)
+            else:
+                warning_log("No banner was found")
     except Exception as e:
-        log(e)
-        log("Unable to scrape banner from {0}:{1}".format(ip_address, port))
+        warning_log("Unable to scrape banner from {0}:{1} - {2}".format(ip_address, port, e))
         pass
 
 
@@ -77,18 +89,15 @@ def do_smtp_scans(ip, dir):
     log("Found smtp server - starting scans")
     launch_terminal(SMTP_SCRIPT, format_script_args(ip, dir))
     log("Trying to scrape SMTP banner")
-    banner = scrape_banner(ip, 25)
-    with open("{0}/smtpbanner.txt".format(dir), "w") as banner_output:
-        banner_output.write(banner)
+    scrape_banner(ip, 25, "{0}/smtpbanner.txt".format(dir))
+    
 
 
 def do_pop3_scans(ip, dir):
     log("Found pop3 server - starting scans")
     launch_terminal(POP3_SCRIPT, format_script_args(ip, dir))
     log("Trying to scrape POP3 banner")
-    banner = scrape_banner(ip, 110)
-    with open("{0}/pop3banner.txt".format(dir), "w") as banner_output:
-        banner_output.write(banner)
+    scrape_banner(ip, 25, "{0}/pop3banner.txt".format(dir))
 
 
 def do_http_scans(ip, dir):
@@ -101,6 +110,9 @@ def do_smb_scans(ip, dir):
     log("Found smb server - starting enumeration")
     launch_terminal(SMB_SCRIPT, format_script_args(ip, dir))
 
+def do_vnc_scans(ip, dir):
+    log("Found vnc server - starting enumeration")
+    launch_terminal(VNC_SCRIPT, format_script_args(ip, dir))
 
 def start_initial_scans(ip, dir):
     log("Launching initial port scans")
@@ -131,7 +143,8 @@ service_map = {
     "25/tcp": do_smtp_scans,
     "80/tcp": do_http_scans,
     "110/tcp": do_pop3_scans,
-    "445/tcp": do_smb_scans
+    "445/tcp": do_smb_scans,
+    "5900/tcp": do_vnc_scans
 }
 
 # Parse arguments
