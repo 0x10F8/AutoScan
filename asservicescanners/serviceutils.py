@@ -75,8 +75,9 @@ def launch_terminal(script, script_args, keep_open=False):
     args = split(SPAWN_SHELL_FRMT.format(script, script_args))
     Popen(args)
 
+
 def launch_script_without_terminal(script, script_args, wait=True):
-    process = Popen(RUN_SCRIPT_FRMT.format(script, script_args))
+    args = split(RUN_SCRIPT_FRMT.format(script, script_args))
+    process = Popen(args)
     if wait:
         process.wait()
-    
