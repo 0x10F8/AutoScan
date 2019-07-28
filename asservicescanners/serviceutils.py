@@ -14,7 +14,7 @@ def get_script(script_name):
 SCRIPTS_DIR = "{0}/scripts".format(getcwd())
 
 # Format string for shell spawning, argument 0 is the script and 1 is the args
-SPAWN_SHELL_FRMT = 'gnome-terminal -q -- /bin/bash -c "{0} {1}"'
+SPAWN_SHELL_FRMT = 'gnome-terminal -q -- /bin/bash -c "bash {0} {1}"'
 
 # -------------------------
 # Service scripts and ports
