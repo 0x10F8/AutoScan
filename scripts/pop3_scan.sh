@@ -1,3 +1,3 @@
 #/bin/bash
 
-nmap --script="pop3* and not brute" $1 | tee $2
+nmap -p 110 --script="pop3* and not brute" $1 | tee $2

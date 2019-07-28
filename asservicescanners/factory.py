@@ -5,11 +5,12 @@ from asservicescanners.pop3scanner import POP3Scanner
 from asservicescanners.vncscanner import VNCScanner
 from asservicescanners.imapscanner import IMAPScanner
 from asservicescanners.sshscanner import SSHScanner
-
+from asservicescanners.ftpscanner import FTPScanner
 
 def build_service_factory(ip, output_dir):
     # Mapping of NMAP token to the relevant scanner
     return {
+        "21/tcp": FTPScanner(ip, output_dir),
         "22/tcp": SSHScanner(ip, output_dir),
         "25/tcp": SMTPScanner(ip, output_dir),
         "80/tcp": HTTPScanner(ip, output_dir),

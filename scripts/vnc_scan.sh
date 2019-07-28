@@ -1,3 +1,3 @@
 #!/bin/bash
 
-nmap --script="vnc* and not brute" $1 | tee $2
+nmap -p 5900 --script="vnc* and not brute" $1 | tee $2

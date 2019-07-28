@@ -25,6 +25,10 @@ BASIC_SCAN_SCRIPT = get_script("basic_scan.sh")
 TCP_SCAN_SCRIPT = get_script("tcp_scan.sh")
 UDP_SCAN_SCRIPT = get_script("udp_scan.sh")
 
+# FTP Info
+FTP_PORT = 21
+FTP_SCRIPT = get_script("ftp_Scan.sh")
+
 # SSH Info
 SSH_PORT = 22
 SSH_SCRIPT = get_script("ssh_scan.sh")
