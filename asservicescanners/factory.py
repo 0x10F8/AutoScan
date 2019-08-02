@@ -7,6 +7,7 @@ from asservicescanners.imapscanner import IMAPScanner
 from asservicescanners.sshscanner import SSHScanner
 from asservicescanners.ftpscanner import FTPScanner
 from asservicescanners.httpsscanner import HTTPSScanner
+from asservicescanners.rdpscanner import RDPScanner
 
 def build_service_factory(ip, output_dir):
     # Mapping of NMAP token to the relevant scanner
@@ -19,5 +20,6 @@ def build_service_factory(ip, output_dir):
         "143/tcp": IMAPScanner(ip, output_dir),
         "443/tcp": HTTPSScanner(ip, output_dir),
         "445/tcp": SMBScanner(ip, output_dir),
+        "3389/tcp": RDPScanner(ip, output_dir),
         "5900/tcp": VNCScanner(ip, output_dir)
     }

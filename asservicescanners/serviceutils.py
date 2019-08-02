@@ -65,6 +65,10 @@ SMB_SCRIPT = get_script("smb_scan.sh")
 POP3_PORT = 110
 POP3_SCRIPT = get_script("pop3_scan.sh")
 
+# RDP Info
+RDP_PORT = 3389
+RDP_SCRIPT = get_script("rdp_scan.sh")
+
 # VNC Info
 VNC_PORT = 5900
 VNC_SCRIPT = get_script("vnc_scan.sh")
