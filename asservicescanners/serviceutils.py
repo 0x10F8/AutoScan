@@ -53,7 +53,7 @@ HTTP_DIRSEARCH_SCRIPT = get_script("dirsearch.sh")
 
 # LDAP Info
 LDAP_PORT = 389
-LDAP_SCRIPT = get_script("ldap_script.sh")
+LDAP_SCRIPT = get_script("ldap_scan.sh")
 
 # HTTPS Info
 HTTPS_PORT = 443
