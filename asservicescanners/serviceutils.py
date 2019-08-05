@@ -51,6 +51,10 @@ HTTP_SCRIPT = get_script("http_scan.sh")
 HTTP_NIKTO_SCRIPT = get_script("nikto_scan.sh")
 HTTP_DIRSEARCH_SCRIPT = get_script("dirsearch.sh")
 
+# LDAP Info
+LDAP_PORT = 389
+LDAP_SCRIPT = get_script("ldap_script.sh")
+
 # HTTPS Info
 HTTPS_PORT = 443
 HTTPS_SCRIPT = get_script("https_scan.sh")
