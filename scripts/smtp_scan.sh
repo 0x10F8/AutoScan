@@ -1,3 +1,3 @@
 #!/bin/bash
 
-nmap -p 25 --script="smtp* and not brute" $1 | tee $2/smtpscan.txt
+nmap -sT -p 25 --script="smtp* and not brute" $1 | tee $2/smtpscan.txt

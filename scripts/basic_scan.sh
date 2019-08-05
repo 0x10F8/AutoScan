@@ -1,3 +1,3 @@
 #!/bin/bash
 
-nmap $1 | tee $2/basicscan.txt
+nmap -sT $1 | tee $2/basicscan.txt

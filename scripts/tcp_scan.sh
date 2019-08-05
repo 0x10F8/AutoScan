@@ -1,3 +1,3 @@
 #!/bin/bash
 
-nmap -A -sC -sV -p- $1 | tee $2/portscan.txt
+nmap -sT -A -sC -sV -p- $1 | tee $2/portscan.txt
